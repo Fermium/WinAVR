@@ -5,7 +5,7 @@ command-timeout: 55
 build:
   steps:
     - install-packages:
-      packages: git wget make mingw-w64 gcc g++ bzip2 zip
+      packages: git wget bzip2 zip tar
     - script:
         name: Set up environment variables and functions
         code: |
@@ -17,7 +17,7 @@ build:
           
           #version to build
           NAME_BINUTILS="binutils-2.9.1"
-          NAME_GCC="gcc-6.1.0"
+          NAME_GCC="gcc-6.2.0"
           NAME_LIBC="avr-libc-2.0.0"
           
           GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
@@ -51,9 +51,11 @@ build:
     - script:
         name: Get sources
         code: |
-          wget -q ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
-          wget -q ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
-          wget -q ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
+          wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.gz
+          wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
+          wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
+    - install-packages:
+        packages: make mingw-w64 gcc g++ 
     - script:
         name: Make AVR-Binutils
         code: |
@@ -79,7 +81,7 @@ build:
     - script:
         name: Make AVR-LIBC
         code: |   
-          bunzip2 -c -q $NAME_LIBC.tar.bz2 | tar xf -
+          tar -zxf $NAME_LIBC.tar.gz | tar xf -
           mkdir -p $NAME_LIBC/obj-avr
           cd $NAME_LIBC/obj-avr
           confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
