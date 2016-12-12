@@ -59,34 +59,36 @@ build:
     - script:
         name: Make AVR-Binutils
         code: |
+          cd $WERCKER_SOURCE_DIR
           bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
           mkdir -p $NAME_BINUTILS/obj-avr
           cd $NAME_BINUTILS/obj-avr
           confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
           #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
           confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
-          cd $WERCKER_SOURCE_DIR
     - script:
         name: Prepare AVR-GCC
         code: |
+          cd $WERCKER_SOURCE_DIR
           bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
           mkdir -p $NAME_GCC/obj-avr
           cd $NAME_GCC
           ./contrib/download_prerequisites
-          cd obj-avr
     - script:
         name: Make AVR-GCC for linux
         code: |
+          cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
           confMake "$PREFIX_LINUX" "$OPTS_GCC"
           #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
     - script:
         name: Make AVR-GCC for Windows
         code: |
+          cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
           confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
-          cd $WERCKER_SOURCE_DIR
     - script:
         name: Make AVR-LIBC
-        code: |   
+        code: |  
+          cd $WERCKER_SOURCE_DIR 
           bunzip2 -c -q $NAME_LIBC.tar.gz | tar xf -
           mkdir -p $NAME_LIBC/obj-avr
           cd $NAME_LIBC/obj-avr
