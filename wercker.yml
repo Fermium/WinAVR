@@ -111,24 +111,27 @@ build:
           #rm -rf $PREFIX_WIN32
           rm -rf $PREFIX_WIN64
           rm -rf $PREFIX_LIBC
-after-steps:
+          mv build/linux.zip $WERCKER_CACHE_DIR
+          mv build/wing64.zip $WERCKER_CACHE_DIR
+          mv build/libc.zip $WERCKER_CACHE_DIR
+          
+  after-steps:
     - wantedly/pretty-slack-notify:
         webhook_url: $SLACK_API_TOKEN
-
 deploy:
       steps:
           - github-create-release:
             token: $GITHUB_TOKEN
-            tag: $GITHUB_RELEASE_VERSION
+            tag_name: $GITHUB_RELEASE_VERSION
             title: WinAVR $GITHUB_RELEASE_VERSION
             draft: true
           - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: build/linux.zip
+            file: $WERCKER_CACHE_DIR/linux.zip
             filename: linux-$GITHUB_RELEASE_VERSION.tgz
           - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: build/win64.zip
+            file: $WERCKER_CACHE_DIR/win64.zip
             filename: win64-$GITHUB_RELEASE_VERSION.tgz
           - github-upload-asset:
             token: $GITHUB_TOKEN
