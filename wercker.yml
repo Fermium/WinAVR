@@ -111,9 +111,6 @@ build:
           #- rm -rf $PREFIX_WIN32
           - rm -rf $PREFIX_WIN64
           - rm -rf $PREFIX_LIBC
-          - mv build/linux.zip $WERCKER_CACHE_DIR
-          - mv build/wing64.zip $WERCKER_CACHE_DIR
-          - mv build/libc.zip $WERCKER_CACHE_DIR
           
   after-steps:
     - wantedly/pretty-slack-notify:
