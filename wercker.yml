@@ -59,9 +59,13 @@ build:
     - script:
         name: Make AVR-Binutils
         code: |
+          echo extracting
           tar -zxf $NAME_BINUTILS.tar.gz
+          echo making dir
           mkdir -p $NAME_BINUTILS/obj-avr
+          echo cd
           cd $NAME_BINUTILS/obj-avr
+          echo i am now in $PWD
           confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
           #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
           confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
@@ -75,13 +79,13 @@ build:
           ./contrib/download_prerequisites
           cd obj-avr
     - script:
-          name: Make AVR-GCC for linux
-          code: |
+        name: Make AVR-GCC for linux
+        code: |
           confMake "$PREFIX_LINUX" "$OPTS_GCC"
           #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
     - script:
-          name: Make AVR-GCC for Windows
-          code: |
+        name: Make AVR-GCC for Windows
+        code: |
           confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
           cd $WERCKER_SOURCE_DIR
     - script:
