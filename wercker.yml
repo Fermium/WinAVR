@@ -50,70 +50,70 @@ build:
           mkdir -p "$PREFIX_LIBC"
     - script:
         name: Get sources
-        code: |
-          wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
-          wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
-          wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
+        code: 
+          - wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
+          - wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
+          - wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
     - install-packages:
         packages: make mingw-w64 gcc g++ ruby
     - script:
         name: Make AVR-Binutils
-        code: |
-          cd $WERCKER_SOURCE_DIR
-          bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
-          mkdir -p $NAME_BINUTILS/obj-avr
-          cd $NAME_BINUTILS/obj-avr
-          confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
+        code: 
+          - cd $WERCKER_SOURCE_DIR
+          - bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
+          - mkdir -p $NAME_BINUTILS/obj-avr
+          - cd $NAME_BINUTILS/obj-avr
+          - confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
           #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
-          confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
+          - confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
     - script:
         name: Prepare AVR-GCC
-        code: |
-          cd $WERCKER_SOURCE_DIR
-          bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
-          mkdir -p $NAME_GCC/obj-avr
-          cd $NAME_GCC
-          ./contrib/download_prerequisites
+        code: 
+          - cd $WERCKER_SOURCE_DIR
+          - bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
+          - mkdir -p $NAME_GCC/obj-avr
+          - $NAME_GCC/contrib/download_prerequisites
     - script:
         name: Make AVR-GCC for linux
-        code: |
-          cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
-          confMake "$PREFIX_LINUX" "$OPTS_GCC"
-          #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
+        code: 
+          - cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
+          - confMake "$PREFIX_LINUX" "$OPTS_GCC"
+          #- confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
     - script:
         name: Make AVR-GCC for Windows
-        code: |
-          cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
-          confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
+        code: 
+          - cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
+          - confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
     - script:
         name: Make AVR-LIBC
-        code: |  
-          cd $WERCKER_SOURCE_DIR 
-          bunzip2 -c -q $NAME_LIBC.tar.bz2 | tar xf -
-          mkdir -p $NAME_LIBC/obj-avr
-          cd $NAME_LIBC/obj-avr
-          confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
+        code: 
+          - cd $WERCKER_SOURCE_DIR 
+          - bunzip2 -c -q $NAME_LIBC.tar.bz2 | tar xf -
+          - mkdir -p $NAME_LIBC/obj-avr
+          - cd $NAME_LIBC/obj-avr
+          - confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
           cd $WERCKER_SOURCE_DIR
     - script:
         name: Compress builded EXEs
-        code: |
-          zip linux.zip $PREFIX_LINUX
+        code: 
+          - cd $WERCKER_SOURCE_DIR
+          - zip linux.zip $PREFIX_LINUX
           #- zip win32.zip $PREFIX_WIN32
-          zip win64.zip $PREFIX_WIN64
-          zip libc.zip $PREFIX_LIBC
+          - zip win64.zip $PREFIX_WIN64
+          - zip libc.zip $PREFIX_LIBC
     - script:
         name: Clean up
-        code: |
-          rm $NAME_LIBC.tar.bz2
-          rm $NAME_GCC.tar.bz2
-          rm $NAME_BINUTILS.tar.bz2
-          rm -rf $PREFIX_LINUX
-          #rm -rf $PREFIX_WIN32
-          rm -rf $PREFIX_WIN64
-          rm -rf $PREFIX_LIBC
-          mv build/linux.zip $WERCKER_CACHE_DIR
-          mv build/wing64.zip $WERCKER_CACHE_DIR
-          mv build/libc.zip $WERCKER_CACHE_DIR
+        code: 
+          - rm $NAME_LIBC.tar.bz2
+          - rm $NAME_GCC.tar.bz2
+          - rm $NAME_BINUTILS.tar.bz2
+          - rm -rf $PREFIX_LINUX
+          #- rm -rf $PREFIX_WIN32
+          - rm -rf $PREFIX_WIN64
+          - rm -rf $PREFIX_LIBC
+          - mv build/linux.zip $WERCKER_CACHE_DIR
+          - mv build/wing64.zip $WERCKER_CACHE_DIR
+          - mv build/libc.zip $WERCKER_CACHE_DIR
           
   after-steps:
     - wantedly/pretty-slack-notify:
