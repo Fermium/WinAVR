@@ -89,7 +89,7 @@ build:
         name: Make AVR-LIBC
         code: |  
           cd $WERCKER_SOURCE_DIR 
-          bunzip2 -c -q $NAME_LIBC.tar.gz | tar xf -
+          bunzip2 -c -q $NAME_LIBC.tar.bz2 | tar xf -
           mkdir -p $NAME_LIBC/obj-avr
           cd $NAME_LIBC/obj-avr
           confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
