@@ -94,14 +94,19 @@ build:
           cd $NAME_LIBC/obj-avr
           confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
           cd $WERCKER_SOURCE_DIR
-          
     - script:
         name: Compress builded EXEs
-        code: 
-          - zip linux.zip $PREFIX_LINUX
+        code: |
+          zip linux.zip $PREFIX_LINUX
           #- zip win32.zip $PREFIX_WIN32
-          - zip win64.zip $PREFIX_WIN64
-          - zip libc.zip $PREFIX_LIBC
+          zip win64.zip $PREFIX_WIN64
+          zip libc.zip $PREFIX_LIBC
+    - script:
+        name: Clean up
+        code: 
+          - find . -type f -not -name '*.zip' -print0 | xargs -0 rm --
+          - find . -depth -type d -empty -exec rmdir {} \;
+
 deploy:
       steps:
           - github-create-release:
@@ -111,13 +116,13 @@ deploy:
             draft: true
           - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: linux.zip
+            file: build/linux.zip
             filename: linux-$GITHUB_RELEASE_VERSION.tgz
           - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: win64.zip
+            file: build/win64.zip
             filename: win64-$GITHUB_RELEASE_VERSION.tgz
           - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: libc.zip
+            file: build/libc.zip
             filename: libc-$GITHUB_RELEASE_VERSION.tgz
