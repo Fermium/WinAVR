@@ -49,15 +49,9 @@ build:
     - script:
         name: Get sources
         code: |
-          rm -f $NAME_BINUTILS.tar.bz2
-          rm -rf $NAME_BINUTILS/
-          wget ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
-          rm -f $NAME_GCC.tar.bz2
-          rm -rf $NAME_GCC/
-          wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
-          rm -f $NAME_LIBC.tar.bz2
-          rm -rf $NAME_LIBC/
-          wget ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
+          wget -q ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
+          wget -q ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
+          wget -q ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
     - script:
         name: Make AVR-Binutils
         code: |
@@ -67,7 +61,7 @@ build:
           confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
           #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
           confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
-          cd ../../
+          cd $WERCKER_SOURCE_DIR
     - script:
         name: Make AVR-GCC
         code: |
@@ -79,7 +73,7 @@ build:
           confMake "$PREFIX_LINUX" "$OPTS_GCC"
           #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
           confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
-           cd ../../
+          cd $WERCKER_SOURCE_DIR
     - script:
         name: Make AVR-LIBC
         code: |   
