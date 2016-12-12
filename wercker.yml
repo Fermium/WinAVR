@@ -16,7 +16,7 @@ build:
           PREFIX_LIBC=$WERCKER_SOURCE_DIR/build/libc
           
           #version to build
-          NAME_BINUTILS="binutils-2.9.1"
+          NAME_BINUTILS="binutils-2.26"
           NAME_GCC="gcc-6.2.0"
           NAME_LIBC="avr-libc-2.0.0"
           
@@ -51,7 +51,7 @@ build:
     - script:
         name: Get sources
         code: |
-          wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.gz
+          wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
           wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
           wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
     - install-packages:
@@ -59,13 +59,9 @@ build:
     - script:
         name: Make AVR-Binutils
         code: |
-          echo extracting
-          tar -zxf $NAME_BINUTILS.tar.gz
-          echo making dir
+          bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
           mkdir -p $NAME_BINUTILS/obj-avr
-          echo cd
           cd $NAME_BINUTILS/obj-avr
-          echo i am now in $PWD
           confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
           #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
           confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
