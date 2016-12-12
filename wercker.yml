@@ -59,7 +59,7 @@ build:
     - script:
         name: Make AVR-Binutils
         code: |
-          bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
+          bunzip2 -c -q $NAME_BINUTILS.tar.gz | tar xf -
           mkdir -p $NAME_BINUTILS/obj-avr
           cd $NAME_BINUTILS/obj-avr
           confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
