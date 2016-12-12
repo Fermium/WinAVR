@@ -103,9 +103,14 @@ build:
           zip libc.zip $PREFIX_LIBC
     - script:
         name: Clean up
-        code: 
-          - find . -type f -not -name '*.zip' -print0 | xargs -0 rm --
-          - find . -depth -type d -empty -exec rmdir {} \;
+        code: |
+          rm $NAME_LIBC.tar.bz2
+          rm $NAME_GCC.tar.bz2
+          rm $NAME_BINUTILS.tar.bz2
+          rm -rf $PREFIX_LINUX
+          #rm -rf $PREFIX_WIN32
+          rm -rf $PREFIX_WIN64
+          rm -rf $PREFIX_LIBC
 
 deploy:
       steps:
