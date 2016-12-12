@@ -67,15 +67,21 @@ build:
           confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
           cd $WERCKER_SOURCE_DIR
     - script:
-        name: Make AVR-GCC
+        name: Prepare AVR-GCC
         code: |
           bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
           mkdir -p $NAME_GCC/obj-avr
           cd $NAME_GCC
           ./contrib/download_prerequisites
           cd obj-avr
+    - script:
+          name: Make AVR-GCC for linux
+          code: |
           confMake "$PREFIX_LINUX" "$OPTS_GCC"
           #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
+    - script:
+          name: Make AVR-GCC for Windows
+          code: |
           confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
           cd $WERCKER_SOURCE_DIR
     - script:
