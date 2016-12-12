@@ -1,0 +1,93 @@
+# docker box definition
+box: ubuntu:xenial
+
+# defining the dev pipeline
+build:
+  steps:
+    - install-packages:
+      packages: git wget make mingw-w64 gcc g++ bzip2
+    - script:
+        name: Set up environment variables and functions
+        code: |
+          # Output locations for built toolchains
+          PREFIX_LINUX=$WERCKER_SOURCE_DIR/build/linux
+          PREFIX_WIN32=$WERCKER_SOURCE_DIR/build/win32
+          PREFIX_WIN64=$WERCKER_SOURCE_DIR/build/win64
+          PREFIX_LIBC=$WERCKER_SOURCE_DIR/build/libc
+          
+          #version to build
+          NAME_BINUTILS="binutils-2.26"
+          NAME_GCC="gcc-6.1.0"
+          NAME_LIBC="avr-libc-2.0.0"
+
+          HOST_WIN32="i686-w64-mingw32"
+          HOST_WIN64="x86_64-w64-mingw32"
+
+          OPTS_BINUTILS="--target=avr --disable-nls"
+          OPTS_GCC="--target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --disable-libada --with-dwarf2 --disable-shared --enable-static"
+
+          OPTS_LIBC=""
+
+          PATH="$PATH":"$PREFIX_LINUX"/bin
+          export PATH
+
+          CC=""
+          export CC
+          
+          confMake()
+          {
+            ../configure --prefix=$1 $2 $3 $4
+            make -j 1
+            make install-strip
+            rm -rf *
+          }
+          
+          mkdir -p "$PREFIX_LINUX"
+          mkdir -p "$PREFIX_WIN32"
+          mkdir -p "$PREFIX_WIN64"
+          mkdir -p "$PREFIX_LIBC"
+    - script:
+        name: Get sources
+        code: |
+          rm -f $NAME_BINUTILS.tar.bz2
+          rm -rf $NAME_BINUTILS/
+          wget ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
+          rm -f $NAME_GCC.tar.bz2
+          rm -rf $NAME_GCC/
+          wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
+          rm -f $NAME_LIBC.tar.bz2
+          rm -rf $NAME_LIBC/
+          wget ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
+    - script:
+        name: Make AVR-Binutils
+        code: |
+          bunzip2 -c $NAME_BINUTILS.tar.bz2 | tar xf -
+          mkdir -p $NAME_BINUTILS/obj-avr
+          cd $NAME_BINUTILS/obj-avr
+          confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
+          #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
+          confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
+          cd ../../
+    - script:
+        name: Make AVR-GCC
+        code: |
+          bunzip2 -c $NAME_GCC.tar.bz2 | tar xf -
+          mkdir -p $NAME_GCC/obj-avr
+          cd $NAME_GCC
+          ./contrib/download_prerequisites
+          cd obj-avr
+          confMake "$PREFIX_LINUX" "$OPTS_GCC"
+          #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
+          confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
+           cd ../../
+    - script:
+        name: Make AVR-LIBC
+        code: |   
+          bunzip2 -c $NAME_LIBC.tar.bz2 | tar xf -
+          mkdir -p $NAME_LIBC/obj-avr
+          cd $NAME_LIBC/obj-avr
+          confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
+          cd $WERCKER_SOURCE_DIR
+          
+           
+        
