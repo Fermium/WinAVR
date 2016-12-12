@@ -92,7 +92,6 @@ build:
           - mkdir -p $NAME_LIBC/obj-avr
           - cd $NAME_LIBC/obj-avr
           - confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
-          cd $WERCKER_SOURCE_DIR
     - script:
         name: Compress builded EXEs
         code: 
