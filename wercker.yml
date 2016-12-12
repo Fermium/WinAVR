@@ -111,6 +111,9 @@ build:
           #rm -rf $PREFIX_WIN32
           rm -rf $PREFIX_WIN64
           rm -rf $PREFIX_LIBC
+after-steps:
+    - wantedly/pretty-slack-notify:
+        webhook_url: $SLACK_API_TOKEN
 
 deploy:
       steps:
