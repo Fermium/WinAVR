@@ -55,7 +55,7 @@ build:
           wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
           wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
     - install-packages:
-        packages: make mingw-w64 gcc g++ 
+        packages: make mingw-w64 gcc g++ ruby
     - script:
         name: Make AVR-Binutils
         code: |
