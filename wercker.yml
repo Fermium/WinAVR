@@ -20,7 +20,7 @@ build:
           NAME_GCC="gcc-6.2.0"
           NAME_LIBC="avr-libc-2.0.0"
           
-          GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
+          export GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
 
           HOST_WIN32="i686-w64-mingw32"
           HOST_WIN64="x86_64-w64-mingw32"
@@ -55,7 +55,7 @@ build:
           - wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
           - wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
     - install-packages:
-        packages: make mingw-w64 gcc g++ ruby
+        packages: make mingw-w64 gcc g++
     - script:
         name: Make AVR-Binutils
         code: 
@@ -111,9 +111,6 @@ build:
           - rm -rf $PREFIX_WIN64
           - rm -rf $PREFIX_LIBC
           
-  after-steps:
-    - wantedly/pretty-slack-notify:
-        webhook_url: $SLACK_API_TOKEN
 deploy:
       steps:
           - github-create-release:
