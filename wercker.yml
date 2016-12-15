@@ -20,8 +20,8 @@ build:
           NAME_GCC="gcc-6.2.0"
           NAME_LIBC="avr-libc-2.0.0"
           
-          export GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
-
+          GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
+          printf "$GITHUB_RELEASE_VERSION" > release-info.txt
           HOST_WIN32="i686-w64-mingw32"
           HOST_WIN64="x86_64-w64-mingw32"
 
@@ -115,18 +115,18 @@ deploy:
       steps:
           - github-create-release:
             token: $GITHUB_TOKEN
-            tag: $GITHUB_RELEASE_VERSION
-            title: WinAVR $GITHUB_RELEASE_VERSION
+            tag: $(cat release-info.txt)
+            title: WinAVR $(cat release-info.txt)
             draft: true
           - github-upload-asset:
             token: $GITHUB_TOKEN
             file: $WERCKER_CACHE_DIR/linux.zip
-            filename: linux-$GITHUB_RELEASE_VERSION.tgz
+            filename: linux-$(cat release-info.txt).tgz
           - github-upload-asset:
             token: $GITHUB_TOKEN
             file: $WERCKER_CACHE_DIR/win64.zip
-            filename: win64-$GITHUB_RELEASE_VERSION.tgz
+            filename: win64-$(cat release-info.txt).tgz
           - github-upload-asset:
             token: $GITHUB_TOKEN
             file: build/libc.zip
-            filename: libc-$GITHUB_RELEASE_VERSION.tgz
+            filename: libc-$(cat release-info.txt).tgz
