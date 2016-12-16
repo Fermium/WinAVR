@@ -70,7 +70,7 @@ build:
           cd $WERCKER_SOURCE_DIR
           bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
           mkdir -p $NAME_GCC/obj-avr
-          $NAME_GCC/contrib/download_prerequisites
+          cd $NAME_GCC && contrib/download_prerequisites
     - script:
         name: Make AVR-GCC for linux
         code: |
