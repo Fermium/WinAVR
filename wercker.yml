@@ -21,7 +21,6 @@ build:
           NAME_LIBC="avr-libc-2.0.0"
           
           GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
-          printf "$GITHUB_RELEASE_VERSION" > release-info.txt
           HOST_WIN32="i686-w64-mingw32"
           HOST_WIN64="x86_64-w64-mingw32"
 
@@ -50,83 +49,83 @@ build:
           mkdir -p "$PREFIX_LIBC"
     - script:
         name: Get sources
-        code: 
-          - wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
-          - wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
-          - wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
+        code: |
+          wget  -nv ftp://ftp.mirrorservice.org/sites/ftp.gnu.org/gnu/binutils/$NAME_BINUTILS.tar.bz2
+          wget  -nv ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/$NAME_GCC/$NAME_GCC.tar.bz2
+          wget  -nv ftp://ftp.mirrorservice.org/sites/download.savannah.gnu.org/releases/avr-libc/$NAME_LIBC.tar.bz2
     - install-packages:
         packages: make mingw-w64 gcc g++
     - script:
         name: Make AVR-Binutils
-        code: 
-          - cd $WERCKER_SOURCE_DIR
-          - bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
-          - mkdir -p $NAME_BINUTILS/obj-avr
-          - cd $NAME_BINUTILS/obj-avr
-          - confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          bunzip2 -c -q $NAME_BINUTILS.tar.bz2 | tar xf -
+          mkdir -p $NAME_BINUTILS/obj-avr
+          cd $NAME_BINUTILS/obj-avr
+          confMake "$PREFIX_LINUX" "$OPTS_BINUTILS"
           #confMake "$PREFIX_WIN32" "$OPTS_BINUTILS" --host=$HOST_WIN32 --build=`../config.guess`
-          - confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
+          confMake "$PREFIX_WIN64" "$OPTS_BINUTILS" --host=$HOST_WIN64 --build=`../config.guess`
     - script:
         name: Prepare AVR-GCC
-        code: 
-          - cd $WERCKER_SOURCE_DIR
-          - bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
-          - mkdir -p $NAME_GCC/obj-avr
-          - $NAME_GCC/contrib/download_prerequisites
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          bunzip2 -c -q $NAME_GCC.tar.bz2 | tar xf -
+          mkdir -p $NAME_GCC/obj-avr
+          $NAME_GCC/contrib/download_prerequisites
     - script:
         name: Make AVR-GCC for linux
-        code: 
-          - cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
-          - confMake "$PREFIX_LINUX" "$OPTS_GCC"
-          #- confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
+        code: |
+          cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
+          confMake "$PREFIX_LINUX" "$OPTS_GCC"
+          #confMake "$PREFIX_WIN32" "$OPTS_GCC" --host=$HOST_WIN32 --build=`../config.guess`
     - script:
         name: Make AVR-GCC for Windows
-        code: 
-          - cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
-          - confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
+        code: |
+          cd $WERCKER_SOURCE_DIR/$NAME_GCC/obj-avr
+          confMake "$PREFIX_WIN64" "$OPTS_GCC" --host=$HOST_WIN64 --build=`../config.guess`
     - script:
         name: Make AVR-LIBC
-        code: 
-          - cd $WERCKER_SOURCE_DIR 
-          - bunzip2 -c -q $NAME_LIBC.tar.bz2 | tar xf -
-          - mkdir -p $NAME_LIBC/obj-avr
-          - cd $NAME_LIBC/obj-avr
-          - confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
+        code: |
+          cd $WERCKER_SOURCE_DIR 
+          bunzip2 -c -q $NAME_LIBC.tar.bz2 | tar xf -
+          mkdir -p $NAME_LIBC/obj-avr
+          cd $NAME_LIBC/obj-avr
+          confMake "$PREFIX_LIBC" "$OPTS_LIBC" --host=avr --build=`../config.guess`
     - script:
         name: Compress builded EXEs
-        code: 
-          - cd $WERCKER_SOURCE_DIR
-          - zip linux.zip $PREFIX_LINUX
-          #- zip win32.zip $PREFIX_WIN32
-          - zip win64.zip $PREFIX_WIN64
-          - zip libc.zip $PREFIX_LIBC
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          zip linux.zip $PREFIX_LINUX
+          #zip win32.zip $PREFIX_WIN32
+          zip win64.zip $PREFIX_WIN64
+          zip libc.zip $PREFIX_LIBC
     - script:
         name: Clean up
         code: 
-          - rm $NAME_LIBC.tar.bz2
-          - rm $NAME_GCC.tar.bz2
-          - rm $NAME_BINUTILS.tar.bz2
-          - rm -rf $PREFIX_LINUX
-          #- rm -rf $PREFIX_WIN32
-          - rm -rf $PREFIX_WIN64
-          - rm -rf $PREFIX_LIBC
+          rm $NAME_LIBC.tar.bz2
+          rm $NAME_GCC.tar.bz2
+          rm $NAME_BINUTILS.tar.bz2
+          rm -rf $PREFIX_LINUX
+          #rm -rf $PREFIX_WIN32
+          rm -rf $PREFIX_WIN64
+          rm -rf $PREFIX_LIBC
           
 deploy:
       steps:
           - github-create-release:
             token: $GITHUB_TOKEN
-            tag: $(cat release-info.txt)
-            title: WinAVR $(cat release-info.txt)
+            tag: $GITHUB_RELEASE_VERSION
+            title: WinAVR $GITHUB_RELEASE_VERSION
             draft: true
           - github-upload-asset:
             token: $GITHUB_TOKEN
             file: $WERCKER_CACHE_DIR/linux.zip
-            filename: linux-$(cat release-info.txt).tgz
+            filename: linux-$GITHUB_RELEASE_VERSION.zip
           - github-upload-asset:
             token: $GITHUB_TOKEN
             file: $WERCKER_CACHE_DIR/win64.zip
-            filename: win64-$(cat release-info.txt).tgz
+            filename: win64-$GITHUB_RELEASE_VERSION.zip
           - github-upload-asset:
             token: $GITHUB_TOKEN
             file: build/libc.zip
-            filename: libc-$(cat release-info.txt).tgz
+            filename: libc-$GITHUB_RELEASE_VERSION.zip
