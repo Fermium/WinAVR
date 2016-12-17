@@ -114,14 +114,17 @@ deploy:
             title: WinAVR $GITHUB_RELEASE_VERSION
             draft: true
           - github-upload-asset:
+            tag: $GITHUB_RELEASE_VERSION
             token: $GITHUB_TOKEN
             file: $WERCKER_CACHE_DIR/linux.zip
             filename: linux-$GITHUB_RELEASE_VERSION.zip
-          - github-upload-asset:
+          - github-upload-asset:            
+            tag: $GITHUB_RELEASE_VERSION
             token: $GITHUB_TOKEN
             file: $WERCKER_CACHE_DIR/win64.zip
             filename: win64-$GITHUB_RELEASE_VERSION.zip
           - github-upload-asset:
+            tag: $GITHUB_RELEASE_VERSION
             token: $GITHUB_TOKEN
             file: build/libc.zip
             filename: libc-$GITHUB_RELEASE_VERSION.zip
