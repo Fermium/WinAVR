@@ -21,6 +21,8 @@ build:
           export NAME_LIBC="avr-libc-2.0.0"
           
           export GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
+          echo "$GITHUB_RELEASE_VERSION" > versions.txt
+          
           HOST_WIN32="i686-w64-mingw32"
           HOST_WIN64="x86_64-w64-mingw32"
 
@@ -107,21 +109,24 @@ build:
           rm -rf $PREFIX_LIBC
           
 deploy:
-      steps:
-          - github-create-release:
-              token: $GITHUB_TOKEN
-              tag_name: $GITHUB_RELEASE_VERSION
-              title: WinAVR $GITHUB_RELEASE_VERSION
-              draft: true
-          - github-upload-asset:
-              token: $GITHUB_TOKEN
-              file: $WERCKER_CACHE_DIR/linux.zip
-              filename: linux-$GITHUB_RELEASE_VERSION.zip
-          - github-upload-asset:
-              token: $GITHUB_TOKEN
-              file: $WERCKER_CACHE_DIR/win64.zip
-              filename: win64-$GITHUB_RELEASE_VERSION.zip
-          - github-upload-asset:
-              token: $GITHUB_TOKEN
-              file: build/libc.zip
-              filename: libc-$GITHUB_RELEASE_VERSION.zip
+  steps:
+    - script:
+        name: get variables
+        code: export GITHUB_RELEASE_VERSION=$(cat versions.txt) 
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag_name: $GITHUB_RELEASE_VERSION
+        title: WinAVR $GITHUB_RELEASE_VERSION
+        draft: true
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: $WERCKER_CACHE_DIR/linux.zip
+        filename: linux-$GITHUB_RELEASE_VERSION.zip
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: $WERCKER_CACHE_DIR/win64.zip
+        filename: win64-$GITHUB_RELEASE_VERSION.zip
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: build/libc.zip
+        filename: libc-$GITHUB_RELEASE_VERSION.zip
