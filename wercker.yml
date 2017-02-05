@@ -15,13 +15,8 @@ build:
           PREFIX_WIN64=$WERCKER_SOURCE_DIR/build/win64
           PREFIX_LIBC=$WERCKER_SOURCE_DIR/build/libc
           
-          #version to build
-          export NAME_BINUTILS="binutils-2.26"
-          export NAME_GCC="gcc-6.2.0"
-          export NAME_LIBC="avr-libc-2.0.0"
-          
-          export GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
-          echo "$GITHUB_RELEASE_VERSION" > versions.txt
+          # load versions to build
+          source ./versions.txt
           
           HOST_WIN32="i686-w64-mingw32"
           HOST_WIN64="x86_64-w64-mingw32"
@@ -40,6 +35,7 @@ build:
           confMake()
           {
             ../configure --prefix=$1 $2 $3 $4
+            # Modify the number of parallel processing depending on the number of cores 
             make -j 4
             make install-strip
             rm -rf *
@@ -111,8 +107,8 @@ build:
 deploy:
   steps:
     - script:
-        name: get variables
-        code: export GITHUB_RELEASE_VERSION=$(cat versions.txt) 
+        name: Get release name
+        code: source ./versions.txt
     - github-create-release:
         token: $GITHUB_TOKEN
         tag_name: $GITHUB_RELEASE_VERSION

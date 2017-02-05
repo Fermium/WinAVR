@@ -1,0 +1,10 @@
+# This script is supposed to be sourced from bash
+
+
+#version to build
+export NAME_BINUTILS="binutils-2.26"
+export NAME_GCC="gcc-6.2.0"
+export NAME_LIBC="avr-libc-2.0.0"
+
+# Name of the Github release
+export GITHUB_RELEASE_VERSION="$NAME_GCC---$NAME_LIBC---$NAME_BINUTILS"
