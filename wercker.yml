@@ -128,5 +128,5 @@ deploy:
         filename: win64-$GITHUB_RELEASE_VERSION.zip
     - github-upload-asset:
         token: $GITHUB_TOKEN
-        file: build/libc.zip
+        file: libc.zip
         filename: libc-$GITHUB_RELEASE_VERSION.zip
