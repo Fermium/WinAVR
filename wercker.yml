@@ -113,7 +113,7 @@ deploy:
           echo "$GITHUB_RELEASE_VERSION"
     - github-create-release:
         token: $GITHUB_TOKEN
-        tag: $GITHUB_RELEASE_VERSION
+        tag_name: "$GITHUB_RELEASE_VERSION"
         title: WinAVR $GITHUB_RELEASE_VERSION
         draft: true
     - github-upload-asset:
