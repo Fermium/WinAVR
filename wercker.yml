@@ -96,7 +96,7 @@ build:
           zip libc.zip $PREFIX_LIBC
     - script:
         name: Clean up
-        code: 
+        code: |
           rm $NAME_LIBC.tar.bz2
           rm $NAME_GCC.tar.bz2
           rm $NAME_BINUTILS.tar.bz2
@@ -108,10 +108,12 @@ deploy:
   steps:
     - script:
         name: Get release name
-        code: source ./versions.txt
+        code: |
+          source ./versions.txt
+          echo "$GITHUB_RELEASE_VERSION"
     - github-create-release:
         token: $GITHUB_TOKEN
-        tag_name: $GITHUB_RELEASE_VERSION
+        tag: $GITHUB_RELEASE_VERSION
         title: WinAVR $GITHUB_RELEASE_VERSION
         draft: true
     - github-upload-asset:
