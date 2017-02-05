@@ -120,11 +120,11 @@ deploy:
         draft: true
     - github-upload-asset:
         token: $GITHUB_TOKEN
-        file: $WERCKER_CACHE_DIR/linux.zip
+        file: linux.zip
         filename: linux-$GITHUB_RELEASE_VERSION.zip
     - github-upload-asset:
         token: $GITHUB_TOKEN
-        file: $WERCKER_CACHE_DIR/win64.zip
+        file: win64.zip
         filename: win64-$GITHUB_RELEASE_VERSION.zip
     - github-upload-asset:
         token: $GITHUB_TOKEN
