@@ -107,7 +107,7 @@ build:
 deploy:
   steps:
     - install-packages:
-        packages: git wget bzip2 zip tar curl
+        packages: git wget bzip2 zip tar curl file
     - script:
         name: Get release name
         code: |
