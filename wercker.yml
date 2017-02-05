@@ -10,27 +10,26 @@ build:
         name: Set up environment variables and functions
         code: |
           # Output locations for built toolchains
-          PREFIX_LINUX=$WERCKER_SOURCE_DIR/build/linux
-          PREFIX_WIN32=$WERCKER_SOURCE_DIR/build/win32
-          PREFIX_WIN64=$WERCKER_SOURCE_DIR/build/win64
-          PREFIX_LIBC=$WERCKER_SOURCE_DIR/build/libc
+          export PREFIX_LINUX=$WERCKER_SOURCE_DIR/build/linux
+          export PREFIX_WIN32=$WERCKER_SOURCE_DIR/build/win32
+          export PREFIX_WIN64=$WERCKER_SOURCE_DIR/build/win64
+          export PREFIX_LIBC=$WERCKER_SOURCE_DIR/build/libc
           
           # load versions to build
           source ./versions.txt
           
-          HOST_WIN32="i686-w64-mingw32"
-          HOST_WIN64="x86_64-w64-mingw32"
+          export HOST_WIN32="i686-w64-mingw32"
+          export HOST_WIN64="x86_64-w64-mingw32"
 
-          OPTS_BINUTILS="--target=avr --disable-nls"
-          OPTS_GCC="--target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --disable-libada --with-dwarf2 --disable-shared --enable-static"
+          export OPTS_BINUTILS="--target=avr --disable-nls"
+          export OPTS_GCC="--target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --disable-libada --with-dwarf2 --disable-shared --enable-static"
 
-          OPTS_LIBC=""
+          export OPTS_LIBC=""
 
-          PATH="$PATH":"$PREFIX_LINUX"/bin
+          export PATH="$PATH":"$PREFIX_LINUX"/bin
           export PATH
 
-          CC=""
-          export CC
+          export CC=""
           
           confMake()
           {
