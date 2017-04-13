@@ -14,3 +14,9 @@ This project is not affiliated with the original WinAVR.
 # Thanks
 
 Based on this blog [post](http://blog.zakkemble.co.uk/avr-gcc-6-1-0/) by Zak.
+
+---
+
+<a href="https://twitter.com/intent/user?screen_name=fermiumlabs">
+    <img src="https://img.shields.io/twitter/follow/fermiumlabs.svg?style=social&label=Follow" alt="Follow Fermium LABS on Twitter" align="right" />
+</a>
