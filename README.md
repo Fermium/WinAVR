@@ -1,3 +1,7 @@
+<a href="https://fermiumlabs.com/">
+    <img src="https://fermiumlabs.com/Assets/img/logos/Horizontal-Main_500px.png" alt="Fermium LABS logo" width="200" align="right" />
+</a>
+
 # WinAVR
 
 The [WinAVR](http://winavr.sourceforge.net/) project is abandoned, but there has been a huge progess in recent years in the gcc compiler, which is far more efficient on the Atmega plaftorm than any other solution.
