@@ -90,9 +90,9 @@ build:
         name: Compress builded EXEs
         code: |
           cd $WERCKER_SOURCE_DIR
-          zip linux.zip $PREFIX_LINUX
-          zip win64.zip $PREFIX_WIN64
-          zip libc.zip $PREFIX_LIBC
+          zip -r linux.zip $PREFIX_LINUX
+          zip -r win64.zip $PREFIX_WIN64
+          zip -r libc.zip $PREFIX_LIBC
     - script:
         name: Clean up
         code: |
