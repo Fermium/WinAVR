@@ -9,7 +9,9 @@ The [WinAVR](http://winavr.sourceforge.net/) project is abandoned, but there has
 You can consider this project a fork of the original Win-AVR, powered by modern technologies.
 This project is not affiliated with the original WinAVR.
 
-# Build procedure
+# Stability
+
+Still in alpha!
 
 # Thanks
 
